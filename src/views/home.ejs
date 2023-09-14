@@ -2,8 +2,34 @@
 <html lang="en">
 <head>
   <%- include('./components/head.ejs') %>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-  
+  <a href="#">Adicionar usuário</a>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>Nome</th>
+        <th>Email</th>
+        <th>Telefone</th>
+        <th>CPF</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>Admin</td>
+        <td>Vinicius</td>
+        <td>vini@gmail.com</td>
+        <td>51981998877</td>
+        <td>12345678910</td>
+        <td><i class="glyphicon glyphicon-edit"></i><i class="glyphicon glyphicon-trash"></i></td>
+      </tr>
+    </tbody>
+  </table>
+  <a href="#">Exportar CSV</a>
 </body>
 </html>
