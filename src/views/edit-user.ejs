@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('./components/head.ejs') %>
+<link rel="stylesheet" href="css/form.css">
+</head>
+ 
+<body>
+    
+    <h1>EDITAR ALUNO</h1>
+    <a href="/"><< voltar</a>
+    <form method="POST">
+
+      <label for="name">Nome</label>
+      <input type="text" name="name" id="name">
+      <br/>
+
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email">
+      <br/>
+
+      <label for="phone">Telefone</label>
+      <input type="tel" name="phone" id="phone">
+      <br/>
+
+      <label for="cpf">CPF</label>
+      <input type="text" name="cpf" id="cpf">
+      <br/>
+
+      <input type="submit" value="CONFIRMAR">
+    </form>
+</body>
+</html>

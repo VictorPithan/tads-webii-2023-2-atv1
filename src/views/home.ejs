@@ -5,7 +5,7 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 <body>
-  <a href="#">Adicionar usuário</a>
+  <a href="/add-user">Adicionar usuário</a>
   <table>
     <thead>
       <tr>
@@ -19,17 +19,28 @@
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td>1</td>
-        <td>Admin</td>
-        <td>Vinicius</td>
-        <td>vini@gmail.com</td>
-        <td>51981998877</td>
-        <td>12345678910</td>
-        <td><i class="glyphicon glyphicon-edit"></i><i class="glyphicon glyphicon-trash"></i></td>
-      </tr>
+
+        <% for (let i = 0; i < users.length; i++) { %>
+        <tr>
+          <td><%= users[i].id %></td>
+          <td><%= users[i]["user_type"].toLowerCase() %></td>
+          <td><%= users[i].name %></td>
+          <td><%= users[i].email %></td>
+           <td><%= users[i]["phone_number"] %></td>
+          <td><%= users[i].cpf %></td>
+          <td>
+            <a href="/update-user">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <% if (users[i]["user_type"] !== "ADMIN") { %>
+              <i class="glyphicon glyphicon-trash"></i></td>
+            <% } %>
+        </tr>
+      <% } %>
     </tbody>
   </table>
-  <a href="#">Exportar CSV</a>
+  <button>Exportar CSV</button>
+
+
 </body>
 </html>

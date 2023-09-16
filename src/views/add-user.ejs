@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<%- include('./components/head.ejs') %>
+<link rel="stylesheet" href="css/form.css">
+</head>
+ 
+<body>
+    
+    <h1>CRIAR ALUNO</h1>
+    <a href="/"><< voltar</a>
+    <form method="POST">
+      <p>Tipo de usuário</p>
+      <div class="user-type">
+        <div>
+          <input type="radio" name="user-type" id="user-type-admin" value="ADMIN">
+          <label for="user-type-admin">Administrador</label>
+        </div>
+        
+        <div>
+          <input type="radio" name="user-type" id="user-type-client" value="CLIENTE">
+          <label for="user-type-client">Cliente</label>
+        </div>
+      </div>
+      
+      <br/>
+
+      <label for="name">Nome</label>
+      <input type="text" name="name" id="name">
+      <br/>
+
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email">
+      <br/>
+
+      <label for="phone">Telefone</label>
+      <input type="tel" name="phone" id="phone">
+      <br/>
+
+      <label for="cpf">CPF</label>
+      <input type="text" name="cpf" id="cpf">
+      <br/>
+
+      <input type="submit" value="CADASTRAR">
+    </form>
+</body>
+</html>
