@@ -1,47 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<%- include('./components/head.ejs') %>
-<link rel="stylesheet" href="css/form.css">
-</head>
- 
-<body>
-    
+  <head>
+    <%- include('./components/head.ejs') %>
+    <link rel="stylesheet" href="css/form.css" />
+  </head>
+
+  <body>
     <h1>CRIAR ALUNO</h1>
-    <a href="/"><< voltar</a>
+    <a style="display: block; margin-block: 8px" href="/home"><< voltar</a>
     <form method="POST">
-      <p>Tipo de usuário</p>
-      <div class="user-type">
-        <div>
-          <input type="radio" name="user-type" id="user-type-admin" value="ADMIN">
-          <label for="user-type-admin">Administrador</label>
+      <div>
+        <label>Tipo de usuário</label>
+        <div class="user-type">
+          <div>
+            <input
+              type="radio"
+              name="role"
+              id="user-type-admin"
+              value="ADMIN"
+            />
+            <label for="user-type-admin">Administrador</label>
+          </div>
+
+          <div>
+            <input
+              type="radio"
+              name="role"
+              id="user-type-client"
+              value="CLIENTE"
+              checked
+            />
+            <label for="user-type-client">Cliente</label>
+          </div>
         </div>
-        
-        <div>
-          <input type="radio" name="user-type" id="user-type-client" value="CLIENTE">
-          <label for="user-type-client">Cliente</label>
-        </div>
+
+        <label for="name">Nome</label>
+        <input type="text" name="name" id="name" />
+        <br />
+        <label for="cpf">CPF</label>
+        <input type="text" name="cpf" id="cpf" />
       </div>
-      
-      <br/>
 
-      <label for="name">Nome</label>
-      <input type="text" name="name" id="name">
-      <br/>
+      <div id="phone-container">
+        <label for="phone">Telefone</label>
+        <input type="tel" name="phone" id="phone" />
+        <button type="button" id="add-phone">Adicionar Telefone</button>
+      </div>
 
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email">
-      <br/>
+      <div id="email-container">
+        <label for="email">E-mail</label>
+        <input type="email" name="email" id="email" />
+        <button type="button" id="add-email">Adicionar E-mail</button>
+      </div>
+      <br />
 
-      <label for="phone">Telefone</label>
-      <input type="tel" name="phone" id="phone">
-      <br/>
-
-      <label for="cpf">CPF</label>
-      <input type="text" name="cpf" id="cpf">
-      <br/>
-
-      <input type="submit" value="CADASTRAR">
+      <button type="submit" id="register-button">Cadastrar</button>
     </form>
-</body>
+
+    <script>
+      function validate(event) {
+        const name = document.getElementById("name");
+        const cpf = document.getElementById("cpf");
+        const phone = document.getElementsByName("phone");
+        const email = document.getElementsByName("email");
+        const fields = [];
+        fields.push(name, cpf, ...phone, ...email);
+
+        let validateFields = false;
+
+        fields.forEach((field) => {
+          handleValidateFields(field);
+          console.log(field)
+        });
+
+        validateFields = fields.every((field) => {
+          
+          return handleValidateFields(field);
+        });
+
+        if (!validateFields) {
+          event.preventDefault();
+        }
+      }
+
+      const handleValidate = document.getElementById("register-button");
+      handleValidate.addEventListener("click", validate, false);
+
+      function handleValidateFields(field) {
+        switch (field.name) {
+          case "name":
+            if (field.value === "") {
+              if (!field.classList.contains("wrong")) {
+                field.classList.add("wrong");
+                displayWarning("Campo nome não pode estar vazio.", field);
+              }
+              return false;
+            } else {
+              if (document.body.contains(document.getElementById("div-name"))) {
+                let div = document.getElementById("div-name");
+                div.parentNode.removeChild(div);
+              }
+              field.classList.remove("wrong");
+              return true;
+            }
+            break;
+          case "cpf":
+            if (!validateCPF(field.value)) {
+              if (!field.classList.contains("wrong")) {
+                field.classList.add("wrong");
+                displayWarning("CPF inválido.", field);
+              }
+              return false;
+            } else {
+              if (document.body.contains(document.getElementById("div-cpf"))) {
+                let div = document.getElementById("div-cpf");
+                div.parentNode.removeChild(div);
+              }
+              field.classList.remove("wrong");
+              return true;
+            }
+            break;
+          case "phone":
+            if (!validatePhoneNumber(field.value)) {
+              if (!field.classList.contains("wrong")) {
+                field.classList.add("wrong");
+                displayWarning("Telefone inválido, deve conter no mínimo 8 números.", field);
+              }
+              return false;
+            } else {
+              if (
+                document.body.contains(document.getElementById("div-phone"))
+              ) {
+                let div = document.getElementById("div-phone");
+                div.parentNode.removeChild(div);
+              }
+              field.classList.remove("wrong");
+            }
+            return true;
+            break;
+          case "email":
+            if (!validateEmail(field.value)) {
+              if (!field.classList.contains("wrong")) {
+                field.classList.add("wrong");
+                displayWarning("E-mail inválido.", field);
+              }
+              return false;
+            } else {
+              if (
+                document.body.contains(document.getElementById("div-email"))
+              ) {
+                let div = document.getElementById("div-email");
+                div.parentNode.removeChild(div);
+              }
+              field.classList.remove("wrong");
+            }
+            return true;
+            break;
+          default:
+            return false;
+        }
+      }
+
+      function displayWarning(msg, field) {
+        const warningBox = document.createElement("div");
+        warningBox.name = `div-${field.name}`;
+        warningBox.classList.add(`div-${field.name}`);
+        warningBox.innerHTML = msg;
+
+        if (!document.body.contains(warningBox)) {
+          field.parentNode.insertBefore(warningBox, field.nextSibling);
+        }
+      }
+
+      function addPhoneField() {
+        const phoneContainer = document.getElementById("phone-container");
+        const newPhoneInput = document.createElement("input");
+        newPhoneInput.type = "tel";
+        newPhoneInput.name = "phone";
+        newPhoneInput.placeholder = "Telefone";
+        phoneContainer.appendChild(newPhoneInput);
+      }
+
+      const addPhoneButton = document.getElementById("add-phone");
+      addPhoneButton.addEventListener("click", addPhoneField);
+
+      function addEmailField() {
+        const emailContainer = document.getElementById("email-container");
+        const newEmailInput = document.createElement("input");
+        newEmailInput.type = "email";
+        newEmailInput.name = "email";
+        newEmailInput.placeholder = "E-mail";
+        emailContainer.appendChild(newEmailInput);
+      }
+
+      const addEmailButton = document.getElementById("add-email");
+      addEmailButton.addEventListener("click", addEmailField);
+
+      function validateCPF(cpf) {
+        // Remove caracteres não numéricos
+        cpf = cpf.replace(/\D/g, "");
+
+        // Verifica se o CPF tem 11 dígitos
+        if (cpf.length !== 11) {
+          return false;
+        }
+
+        // Verifica se todos os dígitos são iguais, o que é inválido
+        if (/^(\d)\1+$/.test(cpf)) {
+          return false;
+        }
+
+        // Calcula o primeiro dígito verificador
+        let soma = 0;
+        for (let i = 0; i < 9; i++) {
+          soma += parseInt(cpf.charAt(i)) * (10 - i);
+        }
+        let resto = soma % 11;
+        let digito1 = resto < 2 ? 0 : 11 - resto;
+
+        // Verifica se o primeiro dígito verificador é válido
+        if (parseInt(cpf.charAt(9)) !== digito1) {
+          return false;
+        }
+
+        // Calcula o segundo dígito verificador
+        soma = 0;
+        for (let i = 0; i < 10; i++) {
+          soma += parseInt(cpf.charAt(i)) * (11 - i);
+        }
+        resto = soma % 11;
+        let digito2 = resto < 2 ? 0 : 11 - resto;
+
+        // Verifica se o segundo dígito verificador é válido
+        if (parseInt(cpf.charAt(10)) !== digito2) {
+          return false;
+        }
+
+        // Se todas as verificações passaram, o CPF é válido
+        return true;
+      }
+    
+      function validateEmail(email) {
+        // Expressão regular para validar o formato de e-mail
+        const regex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        // Testa o e-mail com a expressão regular
+        return regex.test(email);
+      }
+
+      function validatePhoneNumber(phone) {
+        // Remove todos os caracteres não numéricos
+        const numbers = phone.replace(/\D/g, '');
+
+        // Expressão regular para validar se há pelo menos 8 dígitos numéricos
+        const regex = /^\d{8,}$/;
+
+        // Testa o número de telefone com a expressão regular
+        return regex.test(phone);
+      }
+    </script>
+  </body>
 </html>

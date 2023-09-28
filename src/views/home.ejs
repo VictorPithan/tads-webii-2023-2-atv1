@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <%- include('./components/head.ejs') %>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <%- include('./components/head.ejs') %>
 </head>
 <body>
+  <h1>VICTOR RODRIGUES PITHAN</h1>
   <a href="/add-user">Adicionar usuário</a>
   <table>
     <thead>
@@ -23,24 +24,44 @@
         <% for (let i = 0; i < users.length; i++) { %>
         <tr>
           <td><%= users[i].id %></td>
-          <td><%= users[i]["user_type"].toLowerCase() %></td>
+          <td><%= users[i]["user_type"] ? users[i]["user_type"].toLowerCase() : "nada" %></td>
           <td><%= users[i].name %></td>
           <td><%= users[i].email %></td>
-           <td><%= users[i]["phone_number"] %></td>
+          <td><%= users[i]["phone_number"] %></td>
           <td><%= users[i].cpf %></td>
           <td>
-            <a href="/update-user">
+            <a href="/update-user/<%=users[i]['id']%>?leading_email=<%=users[i].email%>&leading_phone=<%=users[i].phone_number%>">
               <i class="glyphicon glyphicon-edit"></i>
             </a>
             <% if (users[i]["user_type"] !== "ADMIN") { %>
-              <i class="glyphicon glyphicon-trash"></i></td>
+              <button class="btn-delete" onclick="excluirUsuario('<%= users[i].id %>')"><i class="glyphicon glyphicon-trash"></i></button>
             <% } %>
+          </td>
         </tr>
+
       <% } %>
     </tbody>
   </table>
-  <button>Exportar CSV</button>
 
+  <div class="pagination">
+        <% for(let i = 0; i < (Math.ceil(amount[0]['amount']) / 5); i++) { %>
+          <div class="btn-pagination"><a href="/home?page=<%=i+1%>"><%= i+1 %></a></div> 
+        <%} %>
+  </div>
 
+  <a href="/export-users">Exportar CSV</a>
+</div>
+
+<script>
+
+  function excluirUsuario(userId) {
+    if (confirm("Tem certeza de que deseja excluir este usuário?")) {
+        window.location.href = "/delete-user/" + userId;
+    } else {
+        alert("Exclusão de usuário cancelada.");
+    }
+}
+
+</script>
 </body>
 </html>

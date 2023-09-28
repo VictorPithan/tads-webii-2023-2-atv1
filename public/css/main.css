@@ -4,8 +4,14 @@
   box-sizing: border-box;
 }
 
+:focus {
+  outline: 0;
+  /* box-shadow: 0 0 0 2px ${(props) => props.theme['green-500']}; */
+}
+
 body {
   -webkit-font-smoothing: antialiased;
+  padding: 20px;
 }
 
 h1 {
@@ -37,4 +43,28 @@ table th {
   text-align: left;
   background-color: #04AA6D;
   color: white;
+}
+
+.btn-delete {
+  color: crimson;
+  border: none;
+  background: none;
+}
+
+.btn-pagination {
+  padding: 4px;
+  border-radius: 4px;
+  background: #04AA6D;
+  
+}
+
+.btn-pagination > a {
+  color: white;
+}
+
+.pagination {
+  width: 100%;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 }

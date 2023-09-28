@@ -2,32 +2,44 @@
 <html lang="en">
 <head>
 <%- include('./components/head.ejs') %>
-<link rel="stylesheet" href="css/form.css">
+<link rel="stylesheet" href="/css/form.css">
 </head>
  
 <body>
     
     <h1>EDITAR ALUNO</h1>
-    <a href="/"><< voltar</a>
+    <a style="display: block; margin-block: 8px;" href="/home"><< voltar</a>
     <form method="POST">
+      
+      <table>
+        <thead>
+          <tr>
+            <th>Email Principal</th>
+            <th>Telefone Principal</th>
+          </tr>
+        </thead>
+        <tbody>
 
-      <label for="name">Nome</label>
-      <input type="text" name="name" id="name">
-      <br/>
+            <tr>
+              <td>
+                <select name="email">
+                  <% for (let j = 0; j < user.emails.length; j++) { %>
+                    <option value="<%= user['emails'][j] %>" <%= user['emails'][j] === leading_email ? 'selected' : '' %>><%= user['emails'][j] %></option>
+                  <% } %>
+                </select>
+              </td>
+              <td>
+                <select name="phone">
+                  <% for (let j = 0; j < user.phones.length; j++) { %>
+                    <option value="<%= user['phones'][j] %>" <%= user['phones'][j] === leading_phone ? 'selected' : '' %>><%= user['phones'][j] %></option>
+                  <% } %>
+                </select>
+              </td>
+            </tr>
 
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email">
-      <br/>
-
-      <label for="phone">Telefone</label>
-      <input type="tel" name="phone" id="phone">
-      <br/>
-
-      <label for="cpf">CPF</label>
-      <input type="text" name="cpf" id="cpf">
-      <br/>
-
-      <input type="submit" value="CONFIRMAR">
+        </tbody>
+      </table>
+      <input type="submit" value="ATUALIZAR">
     </form>
 </body>
 </html>

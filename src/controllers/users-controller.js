@@ -1,68 +1,71 @@
-const { toCSV } = require('../../utils/exportCSV');
-const { db } = require('../database/db-connection');
-const { UserDao } = require("../models/users-model");
+const { db } = require("../database/db-connection");
+const { UserDao, User } = require("../models/users-model");
 
 class UsersController {
+  constructor() {
+    this.usersDao = new UserDao();
+  }
 
-    constructor() {
-        this.usersDao = new UserDao();
+  async getUsers(req, res) {
+    console.info("GET USERS");
+    const { page } = req.query;
+    const amount = await this.usersDao.getAmountUsers();
+
+    let users = await this.usersDao.getUsersWithPagination(parseInt(page) || 1);
+    res.render("home", { users, amount });
+  }
+
+  async createUser(req, res) {
+    console.info("Create user");
+
+    const { name, email, phone, role, cpf } = req.body;
+    if (!name || !email || !phone || !role || !cpf) {
+      res.status(400).send("Bad request - missing parameters");
+      return;
     }
 
-    async getUsers(req, res) {
-        console.log("GET USERS");
-        
-        let users = await this.usersDao.getUsers();
-        
-        // remover professor (exemplo adicionando regra de negocio)
-        // users = users.filter(user => !user.professor);
-        console.log("Users => ", users)
-        console.log("Users to CSV => ", toCSV(users))
-        
-        res.render('home', { users });
+    await this.usersDao.addUser({ role, name, email, phone, cpf });
+
+    return res.redirect("/home");
+  }
+
+  async editUser(req, res) {
+    console.info("Edit user");
+    let id = req.params.id;
+    const { email, phone } = req.body;
+    if (!email || !phone) {
+      res.status(400).send("Bad request - missing parameters");
+      return;
     }
 
-    createUser(req, res) {
-        console.log('Create user');
-        const { name, email, phone } = req.body;
-        if (!name || !email || !phone) {
-            // TODO TAREFA - PAGINA DE CRIACAO INDICANDO OS ERROS NO FORMULARIO
-            res.status(400).send('Bad request - missing parameters');
-            return;
-        }
+    await this.usersDao.editUser({ userId: id, email, phone });
+    return res.redirect("/home");
+  }
 
-        const user = {
-            name,
-            email,
-            phone
-        };
+  async detailsUser(req, res) {
+    console.info("Details user");
+    let id = req.params.id;
+    const { leading_phone, leading_email } = req.query;
 
-        // this.usersDao.addUser(user);
-        // res.redirect('/users');
-        res.send('OK - create user\n' + JSON.stringify(req.body));
-    }
+    let user = await this.usersDao.getDetailsUsers(id);
 
-    editUser(req, res) {
-        console.log('Edit user');
-        const { name, email, phone } = req.body;
-        if (!name || !email || !phone) {
-            // TODO TAREFA - PAGINA DE CRIACAO INDICANDO OS ERROS NO FORMULARIO
-            res.status(400).send('Bad request - missing parameters');
-            return;
-        }
+    res.render("edit-user", { user, leading_phone, leading_email });
+  }
 
-        const user = {
-            name,
-            email,
-            phone
-        };
+  async deleteUser(req, res) {
+    console.info("Delete user");
+    let id = req.params.id;
 
-        // this.usersDao.addUser(user);
-        // res.redirect('/users');
-        res.send('OK - edit user\n' + JSON.stringify(req.body));
-    }
+    await this.usersDao.deleteUser(id);
+    return res.redirect("/home");
+  }
 
+  async exportToCSV(req, res) {
+    await this.usersDao.exportUser();
+    return res.redirect("/home");
+  }
 }
 
 module.exports = {
-    UsersController
-}
+  UsersController,
+};
